@@ -30,13 +30,20 @@ def main():
             seen.add(comparison_tuple)
             unique_info_list.append(item)
 
+    # Strip all string values
+    unique_info_list = [
+        {k: v.strip() if isinstance(v, str) else v for k, v in item.items()}
+        for item in unique_info_list
+    ]
+
     print(f"Total unique records (excluding 'link'): {len(unique_info_list)}")
 
     # Save unique_info_list to CSV
     if unique_info_list:  # Check if unique_info_list is not empty
         csv_file_path = CUR_DIR / 'info_list.csv'  # Specify the CSV file path
-        with open(csv_file_path, 'w', newline='', encoding='utf-8') as csvfile:
-            # Create a CSV writer object
+
+        # Open the CSV file with UTF-8 BOM encoding
+        with open(csv_file_path, 'w', newline='', encoding='utf-8-sig') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=unique_info_list[0].keys())
             writer.writeheader()  # Write the header
             writer.writerows(unique_info_list)  # Write the data
